@@ -1,9 +1,14 @@
 import React from "react";
 import React, { useState } from "react";
 
-export default function Home(data) {
-  const [displayState, setDisplayState] = useState("home");
+export default function Home({data, setDisplayState}) {
   console.log("data", data);
+
+  const handleClick = () => {
+    setDisplayState('questions')
+  }
+
+
   return (
     <div className="flex gap-5 w-full">
       <div>
@@ -11,7 +16,11 @@ export default function Home(data) {
       </div>
       <div className=" widht-full">
         {data.map((el) => (
-          <div className=" cursor-pointer h-10 w-1/2 border-2 hover:bg-blue-850">
+          <div 
+          onClick={handleClick}
+
+
+          className=" cursor-pointer h-10 w-1/2 border-2 hover:bg-blue-850">
             {el.title}
           </div>
         ))}
