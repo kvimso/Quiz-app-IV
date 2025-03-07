@@ -1,12 +1,14 @@
 import React, { useState } from "react";
+import Score from "./Score";
 
-export default function Questions({ data, topic, setDisplayState, setScore }) {
+export default function Questions({ data, topic, setDisplayState }) {
   const question = data.find((el) => el.title === topic);
   const [step, setStep] = useState(0);
   const [submitBtnTitle, setSubmitBtnTitle] = useState("Submit Question");
   const [userAnswer, setUserAnswer] = useState(null);
   const [errorTxt, setErrorTxt] = useState("");
   const [answered, setAnswered] = useState(false);
+  const [score, setScore] = useState(0);
 
   const progressPercentage = ((step + 1) / question.questions.length) * 100;
 
@@ -17,6 +19,9 @@ export default function Questions({ data, topic, setDisplayState, setScore }) {
     }
     setErrorTxt("");
     setAnswered(true);
+    if (userAnswer === question.questions[step].answer) {
+      setScore((prevScore) => prevScore + 1); // Increment score if the answer is correct
+    }
   };
 
   const handleNextQuestion = () => {
@@ -79,6 +84,11 @@ export default function Questions({ data, topic, setDisplayState, setScore }) {
         </button>
       )}
       <h1 className="text-red-600">{errorTxt}</h1>
+      
+      {/* Show score in Score component */}
+      {step === question.questions.length - 1 && (
+        <Score score={score} totalQuestions={question.questions.length} />
+      )}
     </div>
   );
 }
