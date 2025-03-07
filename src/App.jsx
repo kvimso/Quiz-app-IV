@@ -8,7 +8,7 @@ function App() {
   const [displayState, setDisplayState] = useState("home");
   const [topic, setTopic] = useState("");
   const [score, setScore] = useState(0);
-  //ელისაბეთის ნაწილი დაწყების დრო 28:2
+  
 
   return (
     <>
@@ -19,6 +19,7 @@ function App() {
           setDisplayState={setDisplayState}
           data={data}
         />
+        
       )}
       {displayState === "questions" && (
         <Questions
@@ -29,10 +30,11 @@ function App() {
           
         />
       )}
+      
     </>
   );
 }
 
 export default App;
 
-// მეცხრე ხაზი შეცვალე ამით : <Home data={data} />
+
