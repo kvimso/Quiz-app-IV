@@ -81,21 +81,21 @@ export default function Questions({ data, topic, setDisplayState }) {
           </div>
           {answered ? (
             <button
-              className="bg-purple-800 text-white px-4 py-2 rounded-lg w-80 cursor-pointer hover:bg-purple-600"
+              className="bg-purple-800 text-white px-4 py-2 rounded-lg w-120 h-13 cursor-pointer hover:bg-purple-600"
               onClick={handleNextQuestion}
             >
               Next Question
             </button>
           ) : (
             <button
-              className="bg-purple-800 text-white px-4 py-2 rounded-lg w-80 cursor-pointer hover:bg-purple-600 "
+              className="bg-purple-800 text-white px-4 py-2 rounded-lg w-120 h-13 cursor-pointer hover:bg-purple-600 "
               onClick={handleSubmit}
             >
               {submitBtnTitle}
             </button>
           )}
-          <h1 className="text-red-600">{errorTxt}</h1>
         </div>
+        <h1 className="text-red-600 ml-240">{errorTxt}</h1>
 
         {/* Show score in Score component */}
         {step === question.questions.length - 1 && (
