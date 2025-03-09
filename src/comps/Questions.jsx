@@ -79,7 +79,7 @@ export default function Questions({ data, topic, setDisplayState }) {
           <h1 className="text-xl font-bold text-gray-800 dark:text-white">
             {topic}
           </h1>
-          <div className="ml-150">
+          <div className="absolute top-10 right-90 z-10">
             <Switch onChange={themeChange} checked={dark} />
           </div>
         </div>
@@ -87,7 +87,9 @@ export default function Questions({ data, topic, setDisplayState }) {
 
       {quizFinished ? (
         <div className="flex flex-col items-center bg-gradient-to-r  rounded-lg ">
-          <h2 className="text-3xl font-bold text-white mb-4">Quiz Complited!</h2>
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Quiz Complited!
+          </h2>
           <div className="bg-white p-6 rounded-lg shadow-lg w-full">
             <h3 className="text-2xl font-semibold text-center text-purple-700 mb-6">
               Your Final Score
