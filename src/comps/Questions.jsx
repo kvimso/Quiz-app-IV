@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import Score from "./Score";
+import React, { useState, useEffect } from "react";
+//import Score from "./Score";
+import Switch from "react-switch";
 
 export default function Questions({ data, topic, setDisplayState }) {
   const question = data.find((el) => el.title === topic);
@@ -9,7 +10,8 @@ export default function Questions({ data, topic, setDisplayState }) {
   const [errorTxt, setErrorTxt] = useState("");
   const [answered, setAnswered] = useState(false);
   const [score, setScore] = useState(0);
-  const [quizFinished, setQuizFinished] = useState(false); // New state to track if quiz is finished
+  const [quizFinished, setQuizFinished] = useState(false);
+  const [dark, setDark] = useState(false);
 
   const progressPercentage = ((step + 1) / question.questions.length) * 100;
 
@@ -21,7 +23,7 @@ export default function Questions({ data, topic, setDisplayState }) {
     setErrorTxt("");
     setAnswered(true);
     if (userAnswer === question.questions[step].answer) {
-      setScore((prevScore) => prevScore + 1); // Increment score if the answer is correct
+      setScore((prevScore) => prevScore + 1);
     }
   };
 
@@ -31,31 +33,61 @@ export default function Questions({ data, topic, setDisplayState }) {
       setUserAnswer(null);
       setAnswered(false);
     } else {
-      setQuizFinished(true); 
+      setQuizFinished(true);
     }
   };
 
   const handleRestartQuiz = () => {
     setStep(0);
     setScore(0);
-    setQuizFinished(false); 
+    setQuizFinished(false);
     setAnswered(false);
     setUserAnswer(null);
   };
 
+  const themeChange = (check) => {
+    setDark(check);
+  };
+
+  useEffect(() => {
+    if (dark) {
+      document.querySelector("html").classList.add("dark");
+    } else {
+      document.querySelector("html").classList.remove("dark");
+    }
+  }, [dark]);
   return (
-    <div className="flex flex-col items-center gap-4 p-4 w-full max-w-lg font-Rubik mt-5">
-    
-      <h1
-        className="text-2xl font-bold text-center mb-4 ml-100"
-        aria-live="assertive"
-      >
-        {topic}
-      </h1>
+    <div className="flex flex-col items-center w-full max-w-100% mx-auto bg-gray-50 min-h-screen font-sans dark:bg-gray-800 ">
+      <div className="w-full max-w-4xl px-6 pt-12 pb-4">
+        <div className="flex items-center">
+          <div className="h-6 w-6 mr-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-purple-600"
+            >
+              <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+              <path d="M12 16v-4"></path>
+              <path d="M12 8h.01"></path>
+            </svg>
+          </div>
+          <h1 className="text-xl font-bold text-gray-800 dark:text-white">
+            {topic}
+          </h1>
+          <div className="ml-150">
+            <Switch onChange={themeChange} checked={dark} />
+          </div>
+        </div>
+      </div>
 
       {quizFinished ? (
-        <div className="flex flex-col items-center bg-gradient-to-r from-purple-600 via-purple-500 to-purple-400 p-8 rounded-lg shadow-lg mt-10 max-w-md">
-          <h2 className="text-3xl font-bold text-white mb-4">Quiz Finished!</h2>
+        <div className="flex flex-col items-center bg-gradient-to-r  rounded-lg ">
+          <h2 className="text-3xl font-bold text-white mb-4">Quiz Complited!</h2>
           <div className="bg-white p-6 rounded-lg shadow-lg w-full">
             <h3 className="text-2xl font-semibold text-center text-purple-700 mb-6">
               Your Final Score
@@ -83,63 +115,78 @@ export default function Questions({ data, topic, setDisplayState }) {
           </div>
         </div>
       ) : (
-        <div className="ml-100 mt-20">
-          <div className="ml-100 inline-flex gap-30">
-            <h1 className="text-xl font-bold w-80 text-9x1">
-              {question.questions[step].question}
-            </h1>
-            <div className="flex flex-col gap-2 w-80">
-              {question.questions[step].options.map((el) => {
+        <div className="w-full max-w-4xl px-6 pb-12">
+          <p className="text-gray-600 text-sm font-medium mb-4">
+            Question {step + 1} of {question.questions.length}
+          </p>
+
+          <div className="flex flex-col md:flex-row md:space-x-12 mb-8">
+            <div className="md:w-1/2 mb-6 md:mb-0">
+              <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6 leading-tight">
+                {question.questions[step].question}
+              </h2>
+            </div>
+
+            <div className="md:w-1/2 space-y-3">
+              {question.questions[step].options.map((el, index) => {
                 const isCorrect = el === question.questions[step].answer;
                 const isSelected = el === userAnswer;
+                const letters = ["A", "B", "C", "D"];
+
                 return (
                   <div
                     key={el}
-                    className={`border-2 p-3 rounded-lg text-lg cursor-pointer transition-all w-120 h-15
-                    ${isSelected ? "border-purple-500" : "border-gray-300"} 
-                    ${!answered && "hover:bg-purple-100"} 
-                    ${
-                      answered && isCorrect
-                        ? "bg-green-300 border-green-500"
-                        : ""
-                    } 
-                    ${
-                      answered && isSelected && !isCorrect
-                        ? "bg-red-300 border-red-500"
-                        : ""
-                    }`}
+                    className={`flex items-center border border-gray-200 rounded-md p-4 cursor-pointer transition-colors
+                      ${isSelected ? "border-purple-500" : ""} 
+                      ${
+                        !answered &&
+                        "hover:bg-gray-400 bg-gray-200  dark:bg-gray-800 hover:dark:bg-gray-700"
+                      } 
+                      ${
+                        answered && isCorrect
+                          ? "bg-green-600 border-green-800"
+                          : ""
+                      } 
+                      ${
+                        answered && isSelected && !isCorrect
+                          ? "bg-red-600 border-red-800"
+                          : ""
+                      }`}
                     onClick={() => !answered && setUserAnswer(el)}
                   >
-                    {el}
+                    <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-md border border-gray-300 mr-3 font-medium text-gray-700 bg-gray-50">
+                      {letters[index]}
+                    </div>
+                    <span className="text-gray-800 dark:text-white">{el}</span>
                   </div>
                 );
               })}
             </div>
           </div>
-          <div className="ml-100 inline-flex gap-30">
-            <div className="w-80 h-2 bg-gray-300 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-purple-500 transition-all duration-300"
-                style={{ width: `${progressPercentage}%` }}
-              ></div>
+
+          <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+            <div className="w-full md:w-1/2">
+              <div className="h-2 bg-purple-100 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-purple-600 transition-all duration-300"
+                  style={{ width: `${progressPercentage}%` }}
+                ></div>
+              </div>
             </div>
-            {answered ? (
+
+            <div className="w-full md:w-1/2">
               <button
-                className="bg-purple-800 text-white px-4 py-2 rounded-lg w-120 h-13 cursor-pointer hover:bg-purple-600"
-                onClick={handleNextQuestion}
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-medium transition-colors"
+                onClick={answered ? handleNextQuestion : handleSubmit}
               >
-                Next Question
+                {answered ? "Next Question" : "Submit Answer"}
               </button>
-            ) : (
-              <button
-                className="bg-purple-800 text-white px-4 py-2 rounded-lg w-120 h-13 cursor-pointer hover:bg-purple-600"
-                onClick={handleSubmit}
-              >
-                {submitBtnTitle}
-              </button>
-            )}
+
+              {errorTxt && (
+                <p className="text-red-500 text-sm mt-2">{errorTxt}</p>
+              )}
+            </div>
           </div>
-          <h1 className="text-red-600 ml-240">{errorTxt}</h1>
         </div>
       )}
     </div>
